@@ -11,6 +11,7 @@ mod locals;
 use std::collections::HashMap;
 
 use c2zk_ir::pass::run_ir_passes;
+use itertools::Itertools;
 use triton_vm::op_stack::OpStack;
 use twenty_first::shared_math::b_field_element::BFieldElement;
 use wasmtime::*;
@@ -55,16 +56,24 @@ fn check_triton(
     run_ir_passes(&mut module, &triton_target_config.ir_passes);
     let inst_buf = compile_module(module, &triton_target_config).unwrap();
     let out_source = inst_buf.pretty_print();
+    println!("out_source:\n{out_source}");
     expected_triton.assert_eq(&out_source);
     let program = inst_buf.program();
-    let input = input.into_iter().map(Into::into).collect();
+    let input: Vec<BFieldElement> = input.into_iter().map(Into::into).collect();
+    println!("input:\n{}", input.iter().join(","));
     let secret_input = secret_input.into_iter().map(Into::into).collect();
-    let (trace, out, err) = triton_vm::vm::run(&program, input, secret_input);
+
+    // TODO: consider using `debug_terminal_state` here, as it's a lot more light weight.
+    // It will not give you the VM trace though.
+    let (trace, err) = triton_vm::vm::debug(&program, input, secret_input, None, None);
+    let out = trace.last().unwrap().public_output.clone();
 
     pp_trace(&trace);
 
     dbg!(&err);
-    assert!(err.is_none());
+    if let Some(err) = err {
+        panic!("err: {err}");
+    }
     assert_eq!(
         out.into_iter().map(|b| b.into()).collect::<Vec<u64>>(),
         expected_output
@@ -74,7 +83,7 @@ fn check_triton(
     assert_eq!(stack, expected_stack);
 }
 
-fn pp_trace(_trace: &[triton_vm::state::VMState]) {
+fn pp_trace(_trace: &[triton_vm::vm::VMState]) {
     // iterate over last n traces
     for state in _trace.iter() {
         //.rev().take(400).rev() {

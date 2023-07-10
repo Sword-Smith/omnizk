@@ -42,8 +42,8 @@ fn test_func_call() {
             c2zk_stdlib_pub_output:
             push -1
             call globals_get
-            dup0
-            swap2
+            dup 0
+            swap 2
             write_mem
             pop
             pop
@@ -57,7 +57,7 @@ fn test_func_call() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             write_io
             push -1
@@ -73,15 +73,15 @@ fn test_func_call() {
             add:
             push -1
             call globals_get
-            dup0
-            swap2
+            dup 0
+            swap 2
             write_mem
             pop
             pop
             push -4
             add
-            dup0
-            swap2
+            dup 0
+            swap 2
             write_mem
             pop
             pop
@@ -95,7 +95,7 @@ fn test_func_call() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             push -1
             call globals_get
@@ -103,7 +103,7 @@ fn test_func_call() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             add
             push -1
@@ -140,7 +140,7 @@ fn test_func_call() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             return
             globals_set:
@@ -148,7 +148,7 @@ fn test_func_call() {
             mul
             push 00000000002147483647
             add
-            swap1
+            swap 1
             write_mem
             pop
             pop

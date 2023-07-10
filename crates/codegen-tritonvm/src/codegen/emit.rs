@@ -68,7 +68,7 @@ pub fn emit_inst(
         ))),
         Inst::PubInputRead => sink.push(AnInstruction::ReadIo),
         Inst::PubOutputWrite => sink.push(AnInstruction::WriteIo),
-        Inst::SecretInputRead => sink.push(AnInstruction::Divine(None)),
+        Inst::SecretInputRead => sink.push(AnInstruction::Divine),
         Inst::I64Eqz => sink.append(vec![AnInstruction::Push(0u32.into()), AnInstruction::Eq]),
         Inst::I64Eq => sink.push(AnInstruction::Eq),
         Inst::I64Const { value } => sink.push(AnInstruction::Push(felt_i64(*value))),
