@@ -18,6 +18,8 @@
 #![deny(clippy::unimplemented)]
 #![deny(clippy::panic)]
 
+use std::{env, path::Path};
+
 extern crate c2zk_rust_wasm_tests_add;
 extern crate c2zk_rust_wasm_tests_fib;
 
@@ -36,9 +38,9 @@ pub fn wrap_main_with_io(
 pub fn compile_rust_wasm_tests(bundle_name: &str, bin_name: &str) -> Vec<u8> {
     // TODO: make it relative to this crate (not the one it is called from)
     let manifest_path = format!("../rust-wasm-tests/{}/Cargo.toml", bundle_name);
-    // let pwd = std::process::Command::new("pwd").output().unwrap();
-    // dbg!(&pwd);
-    let target_dir = format!("/tmp/c2zk-rust-wasm-tests/{}", bundle_name);
+    let target_dir = env::temp_dir()
+        .join(Path::new("c2zk-rust-wasm-tests"))
+        .join(bundle_name);
     let comp_status = std::process::Command::new("cargo")
         .arg("build")
         .arg("--manifest-path")
