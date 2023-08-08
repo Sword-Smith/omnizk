@@ -24,7 +24,6 @@ mod save_stack_pub_inputs;
 
 pub mod miden;
 pub mod triton;
-pub mod valida;
 pub mod wasm;
 
 #[cfg(test)]

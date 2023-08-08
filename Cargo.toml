@@ -2,11 +2,9 @@
 members = [
   "crates/codegen-tritonvm",
   "crates/codegen-midenvm",
-  "crates/codegen-valida",
   "crates/dialects/ozk",
   "crates/dialects/wasm",
   "crates/dialects/miden",
-  "crates/dialects/valida",
   "crates/ir-transform",
   "crates/frontend-wasm",
   "crates/frontend-clif",
@@ -35,13 +33,11 @@ categories = ["wasm", "no-std", "virtualization"]
 ozk-ozk-dialect = { path = "crates/dialects/ozk" }
 ozk-wasm-dialect = { path = "crates/dialects/wasm" }
 ozk-miden-dialect = { path = "crates/dialects/miden" }
-ozk-valida-dialect = { path = "crates/dialects/valida" }
 ozk-ir-transform = { path = "crates/ir-transform" }
 ozk-frontend-wasm = { path = "crates/frontend-wasm" }
 ozk-frontend-clif = { path = "crates/frontend-clif" }
 ozk-codegen-tritonvm = { path = "crates/codegen-tritonvm" }
 ozk-codegen-midenvm = { path = "crates/codegen-midenvm" }
-ozk-codegen-valida = { path = "crates/codegen-valida" }
 ozk-stdlib = { path = "crates/stdlib" }
 ozk-rust-wasm-tests-fib = { path = "crates/rust-wasm-tests/fib" }
 ozk-rust-wasm-tests-add = { path = "crates/rust-wasm-tests/add" }
