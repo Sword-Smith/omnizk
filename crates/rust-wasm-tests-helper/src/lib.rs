@@ -36,6 +36,8 @@ pub fn wrap_main_with_io(
 
 #[allow(clippy::unwrap_used)]
 pub fn compile_rust_wasm_tests(bundle_name: &str, bin_name: &str) -> Vec<u8> {
+    const TARGET_ARCHITECTURE: &str = "wasm32-unknown-unknown";
+
     // TODO: make it relative to this crate (not the one it is called from)
     let manifest_path = format!("../rust-wasm-tests/{}/Cargo.toml", bundle_name);
     let target_dir = env::temp_dir()
@@ -46,10 +48,8 @@ pub fn compile_rust_wasm_tests(bundle_name: &str, bin_name: &str) -> Vec<u8> {
         .arg("--manifest-path")
         .arg(manifest_path)
         .arg("--release")
-        // .arg("--bin")
-        // .arg(bin_name)
         .arg("--bins")
-        .arg("--target=wasm32-unknown-unknown")
+        .arg(format!("--target={TARGET_ARCHITECTURE}"))
         .arg("--target-dir")
         .arg(target_dir.clone())
         .status()
@@ -57,7 +57,7 @@ pub fn compile_rust_wasm_tests(bundle_name: &str, bin_name: &str) -> Vec<u8> {
     dbg!(&comp_status);
     assert!(comp_status.success());
     let target_bin_file_path = std::path::Path::new(&target_dir)
-        .join("wasm32-unknown-unknown")
+        .join(TARGET_ARCHITECTURE)
         .join("release")
         .join(bin_name)
         .with_extension("wasm");
