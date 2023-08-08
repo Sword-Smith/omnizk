@@ -34,7 +34,7 @@ pub fn wrap_main_with_io(
     })
 }
 
-#[allow(clippy::unwrap_used)]
+// #[allow(clippy::unwrap_used)]
 pub fn compile_rust_wasm_tests(bundle_name: &str, bin_name: &str) -> Vec<u8> {
     const TARGET_ARCHITECTURE: &str = "wasm32-unknown-unknown";
 
