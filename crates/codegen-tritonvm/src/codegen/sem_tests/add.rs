@@ -7,6 +7,10 @@ fn test_add() {
     let input = vec![11, 7];
     let secret_input = vec![3];
     let expected_output = vec![21];
+    // main_add is a rust function. Type is `&'static dyn Fn()`
+
+    // `native_output` is the output you get from running the rust function
+    // on the native architecture, i.e. the host machine.
     let native_output = c2zk_rust_wasm_tests_helper::wrap_main_with_io(
         &c2zk_rust_wasm_tests_add::add::main_add,
     )(input.clone(), secret_input.clone());
@@ -75,8 +79,8 @@ fn test_add() {
             c2zk_stdlib_pub_output:
             push -1
             call globals_get
-            dup0
-            swap2
+            dup 0
+            swap 2
             write_mem
             pop
             pop
@@ -90,7 +94,7 @@ fn test_add() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             write_io
             push -1
@@ -110,15 +114,15 @@ fn test_add() {
             add:
             push -1
             call globals_get
-            dup0
-            swap2
+            dup 0
+            swap 2
             write_mem
             pop
             pop
             push -4
             add
-            dup0
-            swap2
+            dup 0
+            swap 2
             write_mem
             pop
             pop
@@ -132,7 +136,7 @@ fn test_add() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             push -1
             call globals_get
@@ -140,7 +144,7 @@ fn test_add() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             add
             push -1
@@ -164,8 +168,8 @@ fn test_add() {
             pub_output:
             push -1
             call globals_get
-            dup0
-            swap2
+            dup 0
+            swap 2
             write_mem
             pop
             pop
@@ -179,7 +183,7 @@ fn test_add() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             call c2zk_stdlib_pub_output
             push -1
@@ -204,7 +208,7 @@ fn test_add() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             return
             globals_set:
@@ -212,7 +216,7 @@ fn test_add() {
             mul
             push 00000000002147483647
             add
-            swap1
+            swap 1
             write_mem
             pop
             pop

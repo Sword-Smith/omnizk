@@ -2,8 +2,8 @@ use c2zk_ir::ir::ext::Ext;
 use c2zk_ir::ir::ext::TritonExt;
 use c2zk_ir::ir::FuncIndex;
 use c2zk_ir::ir::Inst;
-use triton_opcodes::instruction::AnInstruction;
-use triton_opcodes::ord_n::Ord16;
+use triton_vm::instruction::AnInstruction;
+use triton_vm::op_stack::OpStackElement;
 
 use crate::felt_i32;
 use crate::felt_i64;
@@ -35,18 +35,18 @@ pub fn emit_inst(
             // todo!("extract as an IR pass with tests");
             sink.append(vec![
                 // swap lhs and rhs from Wasm semantics to TritonVM Lt semantics
-                AnInstruction::Swap(Ord16::ST1),
+                AnInstruction::Swap(OpStackElement::ST1),
                 // Duplicate the pair
-                AnInstruction::Dup(Ord16::ST1),
-                AnInstruction::Dup(Ord16::ST1),
+                AnInstruction::Dup(OpStackElement::ST1),
+                AnInstruction::Dup(OpStackElement::ST1),
                 AnInstruction::Lt,
                 // invert Lt to Gt
                 AnInstruction::Push(0u32.into()),
                 AnInstruction::Eq,
                 // ----------------
                 // swap Gt with second element
-                AnInstruction::Swap(Ord16::ST2),
-                AnInstruction::Swap(Ord16::ST1),
+                AnInstruction::Swap(OpStackElement::ST2),
+                AnInstruction::Swap(OpStackElement::ST1),
                 AnInstruction::Eq,
                 // Gt + Eq
                 AnInstruction::Add,
@@ -68,25 +68,25 @@ pub fn emit_inst(
         ))),
         Inst::PubInputRead => sink.push(AnInstruction::ReadIo),
         Inst::PubOutputWrite => sink.push(AnInstruction::WriteIo),
-        Inst::SecretInputRead => sink.push(AnInstruction::Divine(None)),
+        Inst::SecretInputRead => sink.push(AnInstruction::Divine),
         Inst::I64Eqz => sink.append(vec![AnInstruction::Push(0u32.into()), AnInstruction::Eq]),
         Inst::I64Eq => sink.push(AnInstruction::Eq),
         Inst::I64Const { value } => sink.push(AnInstruction::Push(felt_i64(*value))),
         // TODO: extract to IR pass
         Inst::I64GeU => sink.append(vec![
             // swap lhs and rhs from Wasm semantics to TritonVM Lt semantics
-            AnInstruction::Swap(Ord16::ST1),
+            AnInstruction::Swap(OpStackElement::ST1),
             // Duplicate the pair
-            AnInstruction::Dup(Ord16::ST1),
-            AnInstruction::Dup(Ord16::ST1),
+            AnInstruction::Dup(OpStackElement::ST1),
+            AnInstruction::Dup(OpStackElement::ST1),
             AnInstruction::Lt,
             // invert Lt to Gt
             AnInstruction::Push(0u32.into()),
             AnInstruction::Eq,
             // ----------------
             // swap Gt with second element
-            AnInstruction::Swap(Ord16::ST2),
-            AnInstruction::Swap(Ord16::ST1),
+            AnInstruction::Swap(OpStackElement::ST2),
+            AnInstruction::Swap(OpStackElement::ST1),
             AnInstruction::Eq,
             // Gt + Eq
             AnInstruction::Add,
@@ -134,11 +134,11 @@ fn write_mem(sink: &mut InstBuffer, offset: &u32) {
     // ignoring the fact that Wasm pointer points to a byte
     if offset != &0 {
         // swap the value and the pointer to add the offset
-        sink.push(AnInstruction::Swap(Ord16::ST1));
+        sink.push(AnInstruction::Swap(OpStackElement::ST1));
         sink.push(AnInstruction::Push(felt_i32(*offset as i32)));
         sink.push(AnInstruction::Add);
         // swap the value and the pointer so the value is on top of the stack
-        sink.push(AnInstruction::Swap(Ord16::ST1));
+        sink.push(AnInstruction::Swap(OpStackElement::ST1));
     }
     sink.push(AnInstruction::WriteMem);
     // remove the top two elements from the stack (the value and the pointer)
@@ -155,7 +155,7 @@ fn read_mem(sink: &mut InstBuffer, offset: &u32) {
     sink.push(AnInstruction::Push(felt_i32(0)));
     sink.push(AnInstruction::ReadMem);
     // swap the read value with the pointer (it's left after the read)
-    sink.push(AnInstruction::Swap(Ord16::ST1));
+    sink.push(AnInstruction::Swap(OpStackElement::ST1));
     sink.push(AnInstruction::Pop);
 }
 
@@ -166,10 +166,10 @@ pub(crate) fn func_index_to_label(func_index: FuncIndex, func_names: &[String]) 
         .to_string()
 }
 
-fn ord16_u8(x: u8) -> Result<Ord16, TritonError> {
+fn ord16_u8(x: u8) -> Result<OpStackElement, TritonError> {
     (x as u32)
         .try_into()
-        .map_err(|_| TritonError::InvalidInst(format!("invalid Ord16 index: {}", x)))
+        .map_err(|_| TritonError::InvalidInst(format!("invalid OpStackElement index: {}", x)))
 }
 
 fn unexpected_inst(inst: &Inst) -> TritonError {

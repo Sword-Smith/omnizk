@@ -1,4 +1,4 @@
-use twenty_first::shared_math::b_field_element::BFieldElement;
+use triton_vm::BFieldElement;
 
 pub fn felt_i32(v: i32) -> BFieldElement {
     if v < 0 {

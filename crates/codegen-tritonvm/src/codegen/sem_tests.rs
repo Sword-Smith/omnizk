@@ -12,7 +12,7 @@ use std::collections::HashMap;
 
 use c2zk_ir::pass::run_ir_passes;
 use triton_vm::op_stack::OpStack;
-use twenty_first::shared_math::b_field_element::BFieldElement;
+use triton_vm::BFieldElement;
 use wasmtime::*;
 
 use crate::compile_module;
@@ -51,30 +51,35 @@ fn check_triton(
 
     let frontend = FrontendConfig::Wasm(WasmFrontendConfig::default());
     let triton_target_config = TritonTargetConfig::default();
+    // println!("wasm: {}", wasm.);
     let mut module = translate(wasm, frontend).unwrap();
     run_ir_passes(&mut module, &triton_target_config.ir_passes);
     let inst_buf = compile_module(module, &triton_target_config).unwrap();
     let out_source = inst_buf.pretty_print();
+    println!("out_source: {}", out_source);
     expected_triton.assert_eq(&out_source);
     let program = inst_buf.program();
     let input = input.into_iter().map(Into::into).collect();
     let secret_input = secret_input.into_iter().map(Into::into).collect();
-    let (trace, out, err) = triton_vm::vm::run(&program, input, secret_input);
+    let execution_res = program.debug_terminal_state(input, secret_input, None, None);
+    let last_state = match execution_res {
+        Ok(vm_state) => vm_state,
+        Err((err, vm_state)) => {
+            panic!("VM execution failed with error \"{err}\". Last state was: {vm_state}")
+        }
+    };
 
-    pp_trace(&trace);
-
-    dbg!(&err);
-    assert!(err.is_none());
+    let out = last_state.public_output;
     assert_eq!(
         out.into_iter().map(|b| b.into()).collect::<Vec<u64>>(),
         expected_output
     );
-    let stack = pretty_stack(&trace.last().unwrap().op_stack);
+    let stack = pretty_stack(&last_state.op_stack);
     let expected_stack: Vec<u64> = vec![0; 16];
     assert_eq!(stack, expected_stack);
 }
 
-fn pp_trace(_trace: &[triton_vm::state::VMState]) {
+fn pp_trace(_trace: &[triton_vm::vm::VMState]) {
     // iterate over last n traces
     for state in _trace.iter() {
         //.rev().take(400).rev() {

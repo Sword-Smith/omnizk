@@ -1,17 +1,16 @@
 use std::collections::HashMap;
 
-use triton_opcodes::instruction::AnInstruction;
-use triton_opcodes::instruction::LabelledInstruction;
-use triton_opcodes::program::Program;
+use triton_vm::instruction::AnInstruction;
+use triton_vm::instruction::LabelledInstruction;
 
 use crate::TritonOutputFormat;
 use crate::TritonTargetConfig;
 
-pub struct InstBuffer<'a> {
-    inner: Vec<LabelledInstruction<'a>>,
+pub struct InstBuffer {
+    inner: Vec<LabelledInstruction>,
     comments: HashMap<usize, String>,
 }
-impl<'a> InstBuffer<'a> {
+impl InstBuffer {
     pub(crate) fn new(config: &TritonTargetConfig) -> Self {
         match config.output_format {
             TritonOutputFormat::Binary => todo!(),
@@ -23,8 +22,8 @@ impl<'a> InstBuffer<'a> {
     }
 
     #[allow(dead_code)]
-    pub(crate) fn program(&self) -> Program {
-        Program::new(&self.inner)
+    pub(crate) fn program(&self) -> triton_vm::program::Program {
+        triton_vm::program::Program::new(&self.inner)
     }
 
     pub(crate) fn pretty_print(&self) -> String {
@@ -40,7 +39,7 @@ impl<'a> InstBuffer<'a> {
     }
 
     pub(crate) fn push(&mut self, inst: AnInstruction<String>) {
-        self.inner.push(LabelledInstruction::Instruction(inst, ""));
+        self.inner.push(LabelledInstruction::Instruction(inst));
     }
 
     // pub(crate) fn push_with_comment(&mut self, inst: AnInstruction<String>, comment: String) {
@@ -62,12 +61,12 @@ impl<'a> InstBuffer<'a> {
     pub(crate) fn append(&mut self, insts: Vec<AnInstruction<String>>) {
         let mut insts = insts
             .into_iter()
-            .map(|i| LabelledInstruction::Instruction(i, ""))
+            .map(|i| LabelledInstruction::Instruction(i))
             .collect::<Vec<_>>();
         self.inner.append(&mut insts);
     }
 
     pub(crate) fn push_label(&mut self, label: String) {
-        self.inner.push(LabelledInstruction::Label(label, ""));
+        self.inner.push(LabelledInstruction::Label(label));
     }
 }

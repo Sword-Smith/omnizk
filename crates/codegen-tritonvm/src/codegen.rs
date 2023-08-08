@@ -6,7 +6,7 @@ mod inst_buf;
 pub use inst_buf::InstBuffer;
 mod emit;
 pub use emit::emit_inst;
-use triton_opcodes::instruction::AnInstruction;
+use triton_vm::instruction::AnInstruction;
 
 #[cfg(test)]
 mod sem_tests;
@@ -79,9 +79,8 @@ mod tests {
         let out_source = inst_buf.pretty_print();
         expected_tree.assert_eq(&out_source);
         let program = inst_buf.program();
-        let (_trace, _out, err) = triton_vm::vm::run(&program, vec![], vec![]);
-        dbg!(&err);
-        assert!(err.is_none());
+        let out_res = program.run(vec![], vec![]);
+        assert!(out_res.is_ok());
     }
 
     #[test]
@@ -114,7 +113,7 @@ mod tests {
                 add
                 push 0
                 read_mem
-                swap1
+                swap 1
                 pop
                 return
                 globals_set:
@@ -122,7 +121,7 @@ mod tests {
                 mul
                 push 00000000002147483647
                 add
-                swap1
+                swap 1
                 write_mem
                 pop
                 pop

@@ -48,8 +48,8 @@ fn test_nested_block_br() {
             c2zk_stdlib_pub_output:
             push -1
             call globals_get
-            dup0
-            swap2
+            dup 0
+            swap 2
             write_mem
             pop
             pop
@@ -63,7 +63,7 @@ fn test_nested_block_br() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             write_io
             push -1
@@ -95,7 +95,7 @@ fn test_nested_block_br() {
             add
             push 0
             read_mem
-            swap1
+            swap 1
             pop
             return
             globals_set:
@@ -103,7 +103,7 @@ fn test_nested_block_br() {
             mul
             push 00000000002147483647
             add
-            swap1
+            swap 1
             write_mem
             pop
             pop
@@ -131,14 +131,14 @@ fn test_nested_block_br() {
             next_br_propagation:
             push -2
             call globals_get
-            dup0
+            dup 0
             push 0
             eq
             skiz
             return
             push -1
             add
-            dup0
+            dup 0
             push -2
             call globals_set
             return"#]],
