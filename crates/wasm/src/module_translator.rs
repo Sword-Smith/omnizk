@@ -16,11 +16,18 @@ use wasmparser::{
 
 /// Translate a sequence of bytes forming a valid Wasm binary into a list of valid IR
 pub fn translate_module(data: &[u8]) -> Result<ir::Module, WasmError> {
+    println!("Hi from translate_module");
     let mut validator = Validator::new();
     let mut mod_builder = ModuleBuilder::new();
 
+    // Loop over the various WASM-parsed code blocks where each code block represents
+    // e.g. a function type declaration, an import, and function body, a memory section,
+    // a global section, an export section, or some other language primitive.
+    // Throughout this loop, the IR representation is stored in the `mod_builder` variable.
     for payload in Parser::new(0).parse_all(data) {
         // dbg!(&mod_builder);
+        let dbg_value = payload.as_ref().unwrap();
+        println!("dbg_value: {:#?}", dbg_value);
         match payload? {
             Payload::Version {
                 num,
@@ -45,6 +52,8 @@ pub fn translate_module(data: &[u8]) -> Result<ir::Module, WasmError> {
 
             Payload::FunctionSection(functions) => {
                 validator.function_section(&functions)?;
+
+                // for function in functions.iter
                 // dbg!(
                 //     "Function section: {:?}",
                 //     functions.clone().into_iter().collect::<Vec<_>>()
@@ -94,11 +103,13 @@ pub fn translate_module(data: &[u8]) -> Result<ir::Module, WasmError> {
 
             Payload::CodeSectionStart { count, range, .. } => {
                 validator.code_section_start(count, &range)?;
-                // dbg!("Code section start: {:?}", count);
+                println!("Code section start. Count: {:?}, range: {:?}", count, range);
                 // todo!()
             }
 
             Payload::CodeSectionEntry(body) => {
+                println!("Hi from CodeSectionEntry");
+                // println!("");
                 let mut func_validator = validator
                     .code_section_entry(&body)?
                     .into_validator(Default::default());
@@ -183,6 +194,8 @@ fn parse_code_section_entry(
     let func_name = mod_builder
         .get_func_name(func_idx)
         .unwrap_or(format!("f{}", u32::from(func_idx)));
+    println!("Hi from parse_code_section_entry. func_name: {}", func_name);
+    println!();
     // dbg!(&func_name);
     let mut builder = FuncBuilder::new(func_name);
     let mut reader = body.get_binary_reader();
@@ -293,7 +306,9 @@ fn parse_function_section(
     functions: wasmparser::FunctionSectionReader,
     mod_builder: &mut ModuleBuilder,
 ) -> Result<(), WasmError> {
+    println!("Hi from parse_function_section");
     for (func_idx, type_idx) in functions.into_iter().enumerate() {
+        println!("{func_idx} => {}", type_idx.as_ref().unwrap());
         mod_builder.push_func_type(func_idx as u32, type_idx?);
     }
     Ok(())

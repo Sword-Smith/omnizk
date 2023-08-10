@@ -52,11 +52,24 @@ fn check_triton(
     let frontend = FrontendConfig::Wasm(WasmFrontendConfig::default());
     let triton_target_config = TritonTargetConfig::default();
     // println!("wasm: {}", wasm.);
-    let mut module = translate(wasm, frontend).unwrap();
-    run_ir_passes(&mut module, &triton_target_config.ir_passes);
-    let inst_buf = compile_module(module, &triton_target_config).unwrap();
+    let mut ir_module = translate(wasm, frontend).unwrap();
+    println!("After translate");
+    run_ir_passes(&mut ir_module, &triton_target_config.ir_passes);
+    println!("After run_ir_passes");
+    // dbg!(&ir_module);
+
+    // print all functions
+    // let mut func_idx: usize = ir_module.start_func_idx.into();
+    for func in ir_module.functions().iter() {
+        let func_idx: usize = ir_module.function_idx_by_name(&func.name()).unwrap().into();
+        println!("{func_idx}: {:#?}.", func);
+        // func_idx += 1;
+    }
+
+    let inst_buf = compile_module(ir_module, &triton_target_config).unwrap();
+    println!("After inst_buf");
     let out_source = inst_buf.pretty_print();
-    println!("out_source: {}", out_source);
+    // println!("out_source: {}", out_source);
     expected_triton.assert_eq(&out_source);
     let program = inst_buf.program();
     let input = input.into_iter().map(Into::into).collect();
