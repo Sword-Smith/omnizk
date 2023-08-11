@@ -33,7 +33,7 @@ fn test_add() {
               (func $__main (;3;) (type 2)
                 call $main_add
               )
-              (func $add (;4;) (type 3) (param i64 i64) (result i64)
+              (func $add_function (;4;) (type 3) (param i64 i64) (result i64)
                 local.get 1
                 local.get 0
                 i64.add
@@ -41,9 +41,9 @@ fn test_add() {
               (func $main_add (;5;) (type 2)
                 call $pub_input
                 call $pub_input
-                call $add
+                call $add_function
                 call $secret_input
-                call $add
+                call $add_function
                 call $pub_output
               )
               (func $pub_input (;6;) (type 0) (result i64)
@@ -63,7 +63,7 @@ fn test_add() {
               (export "memory" (memory 0))
               (export "__main" (func $__main))
               (export "main_add" (func $main_add))
-              (export "add" (func $add))
+              (export "add_function" (func $add_function))
               (export "pub_input" (func $pub_input))
               (export "secret_input" (func $secret_input))
               (export "pub_output" (func $pub_output))
@@ -83,7 +83,6 @@ fn test_add() {
             swap 2
             write_mem
             pop
-            pop
             push -4
             add
             push -1
@@ -92,7 +91,6 @@ fn test_add() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -111,20 +109,18 @@ fn test_add() {
             call init_mem_for_locals
             call main_add
             return
-            add:
+            add_function:
             push -1
             call globals_get
             dup 0
             swap 2
             write_mem
             pop
-            pop
             push -4
             add
             dup 0
             swap 2
             write_mem
-            pop
             pop
             push -4
             add
@@ -134,7 +130,6 @@ fn test_add() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -142,7 +137,6 @@ fn test_add() {
             call globals_get
             push 8
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -157,9 +151,9 @@ fn test_add() {
             main_add:
             call pub_input
             call pub_input
-            call add
+            call add_function
             call secret_input
-            call add
+            call add_function
             call pub_output
             return
             pub_input:
@@ -172,7 +166,6 @@ fn test_add() {
             swap 2
             write_mem
             pop
-            pop
             push -4
             add
             push -1
@@ -181,7 +174,6 @@ fn test_add() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -206,7 +198,6 @@ fn test_add() {
             mul
             push 00000000002147483647
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -218,7 +209,6 @@ fn test_add() {
             add
             swap 1
             write_mem
-            pop
             pop
             return"#]],
     )

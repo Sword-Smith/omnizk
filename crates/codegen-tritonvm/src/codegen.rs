@@ -111,7 +111,6 @@ mod tests {
                 mul
                 push 00000000002147483647
                 add
-                push 0
                 read_mem
                 swap 1
                 pop
@@ -123,7 +122,6 @@ mod tests {
                 add
                 swap 1
                 write_mem
-                pop
                 pop
                 return"#]],
         );

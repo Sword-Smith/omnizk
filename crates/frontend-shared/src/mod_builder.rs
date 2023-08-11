@@ -79,6 +79,11 @@ impl ModuleBuilder {
         Ok(())
     }
 
+    pub fn push_func_name(&mut self, func_idx: u32, name: &str) {
+        let func_idx = func_idx.into();
+        self.func_names.insert(func_idx, name.to_owned());
+    }
+
     pub fn push_func_type(&mut self, func_idx: u32, type_idx: u32) {
         let func_idx = func_idx.into();
         let type_idx = type_idx.into();

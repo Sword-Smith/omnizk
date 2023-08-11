@@ -50,7 +50,6 @@ fn test_locals_func_exit() {
             swap 2
             write_mem
             pop
-            pop
             push -4
             add
             push -1
@@ -59,7 +58,6 @@ fn test_locals_func_exit() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -81,13 +79,11 @@ fn test_locals_func_exit() {
             swap 2
             write_mem
             pop
-            pop
             push -4
             add
             dup 0
             swap 2
             write_mem
-            pop
             pop
             push -4
             add
@@ -97,7 +93,6 @@ fn test_locals_func_exit() {
             call globals_get
             push 8
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -105,7 +100,6 @@ fn test_locals_func_exit() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -142,7 +136,6 @@ fn test_locals_func_exit() {
             swap 1
             write_mem
             pop
-            pop
             push 9
             push 7
             call add
@@ -150,7 +143,6 @@ fn test_locals_func_exit() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -180,7 +172,6 @@ fn test_locals_func_exit() {
             mul
             push 00000000002147483647
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -192,7 +183,6 @@ fn test_locals_func_exit() {
             add
             swap 1
             write_mem
-            pop
             pop
             return"#]],
     );

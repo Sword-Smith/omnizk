@@ -236,16 +236,20 @@ pub(crate) trait IntoIr<T> {
     fn into_ir(self) -> T;
 }
 
+/// Convert a WASM function signature declaration into a IR function signature declaration.
 impl IntoIr<ir::FuncType> for wasmparser::FuncType {
     fn into_ir(self) -> ir::FuncType {
-        let params = self.params().iter().copied().map(IntoIr::into_ir).collect();
-        let results = self
+        let params: Vec<ir::Ty> = self.params().iter().copied().map(IntoIr::into_ir).collect();
+        let return_types: Vec<ir::Ty> = self
             .results()
             .iter()
             .copied()
             .map(IntoIr::into_ir)
             .collect();
-        ir::FuncType { params, results }
+        ir::FuncType {
+            params,
+            results: return_types,
+        }
     }
 }
 

@@ -2,7 +2,7 @@ use c2zk_stdlib::*;
 
 #[inline(never)]
 #[no_mangle]
-fn add(a: u64, b: u64) -> u64 {
+fn add_function(a: u64, b: u64) -> u64 {
     a + b
 }
 

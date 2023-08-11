@@ -25,6 +25,7 @@ pub trait IrPass {
 
 pub fn run_ir_passes(module: &mut Module, passes: &[Box<dyn IrPass>]) {
     for pass in passes {
+        println!("running IR pass: {}", pass.name());
         pass.run_mod_pass(module);
     }
 }
