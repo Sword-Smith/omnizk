@@ -159,7 +159,6 @@ fn test_fib() {
             swap 2
             write_mem
             pop
-            pop
             push -4
             add
             push -1
@@ -168,7 +167,6 @@ fn test_fib() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -199,7 +197,6 @@ fn test_fib() {
             call globals_get
             push 12
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -221,7 +218,6 @@ fn test_fib() {
             swap 2
             write_mem
             pop
-            pop
             push -4
             add
             push -1
@@ -230,7 +226,6 @@ fn test_fib() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -255,7 +250,6 @@ fn test_fib() {
             mul
             push 00000000002147483647
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -268,7 +262,6 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             return
             fib_seq_l0_b0:
             call fib_seq_l0_b0_l1_b0
@@ -279,7 +272,6 @@ fn test_fib() {
             call globals_get
             push 16
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -294,7 +286,6 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             call fib_seq_l0_b0_l1_b1
             call next_br_propagation
             skiz
@@ -303,7 +294,6 @@ fn test_fib() {
             call globals_get
             push 8
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -315,7 +305,6 @@ fn test_fib() {
             call globals_get
             push 12
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -327,7 +316,6 @@ fn test_fib() {
             add
             swap 1
             write_mem
-            pop
             pop
             call fib_seq_l0_b0_l1_b2
             call next_br_propagation
@@ -346,7 +334,6 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             skiz
             return
             push 0
@@ -358,7 +345,6 @@ fn test_fib() {
             add
             swap 1
             write_mem
-            pop
             pop
             push 2
             push -2
@@ -388,7 +374,6 @@ fn test_fib() {
             call globals_get
             push 16
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -403,7 +388,6 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push 1
             push -1
             call globals_get
@@ -413,7 +397,6 @@ fn test_fib() {
             add
             swap 1
             write_mem
-            pop
             pop
             push 0
             push -1
@@ -425,7 +408,6 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             call fib_seq_l0_b0_l1_b1_l2_b1
             call next_br_propagation
             skiz
@@ -436,7 +418,6 @@ fn test_fib() {
             call globals_get
             push 16
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -465,7 +446,6 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push 0
             push -1
             call globals_get
@@ -475,7 +455,6 @@ fn test_fib() {
             add
             swap 1
             write_mem
-            pop
             pop
             push 2
             push -2
@@ -487,7 +466,6 @@ fn test_fib() {
             call globals_get
             push 16
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -495,7 +473,6 @@ fn test_fib() {
             call globals_get
             push 12
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -510,12 +487,10 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 16
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -530,12 +505,10 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 12
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -550,12 +523,10 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 16
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -570,12 +541,10 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 12
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -590,12 +559,10 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 16
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -610,12 +577,10 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 12
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -630,12 +595,10 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 16
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -648,13 +611,11 @@ fn test_fib() {
             add
             swap 1
             write_mem
-            pop
             pop
             push -1
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -670,7 +631,6 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             skiz
             recurse
             return
@@ -679,7 +639,6 @@ fn test_fib() {
             call globals_get
             push 16
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -693,12 +652,10 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -712,12 +669,10 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 12
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -730,12 +685,10 @@ fn test_fib() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 8
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -750,7 +703,6 @@ fn test_fib() {
             add
             swap 1
             write_mem
-            pop
             pop
             skiz
             recurse

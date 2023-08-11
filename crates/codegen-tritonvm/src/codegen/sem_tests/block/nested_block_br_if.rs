@@ -55,7 +55,6 @@ fn test_nested_block_br_if() {
             swap 2
             write_mem
             pop
-            pop
             push -4
             add
             push -1
@@ -64,7 +63,6 @@ fn test_nested_block_br_if() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -94,7 +92,6 @@ fn test_nested_block_br_if() {
             mul
             push 00000000002147483647
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -106,7 +103,6 @@ fn test_nested_block_br_if() {
             add
             swap 1
             write_mem
-            pop
             pop
             return
             main_l0_b0:

@@ -41,7 +41,6 @@ fn test_locals_set_get() {
             swap 2
             write_mem
             pop
-            pop
             push -4
             add
             push -1
@@ -50,7 +49,6 @@ fn test_locals_set_get() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -83,12 +81,10 @@ fn test_locals_set_get() {
             swap 1
             write_mem
             pop
-            pop
             push -1
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -117,7 +113,6 @@ fn test_locals_set_get() {
             mul
             push 00000000002147483647
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -129,7 +124,6 @@ fn test_locals_set_get() {
             add
             swap 1
             write_mem
-            pop
             pop
             return"#]],
     );

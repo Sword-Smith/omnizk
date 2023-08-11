@@ -11,7 +11,9 @@ mod locals;
 use std::collections::HashMap;
 
 use c2zk_ir::pass::run_ir_passes;
+use num_traits::Zero;
 use triton_vm::op_stack::OpStack;
+use triton_vm::stark::StarkHasher;
 use triton_vm::BFieldElement;
 use wasmtime::*;
 
@@ -51,25 +53,19 @@ fn check_triton(
 
     let frontend = FrontendConfig::Wasm(WasmFrontendConfig::default());
     let triton_target_config = TritonTargetConfig::default();
-    // println!("wasm: {}", wasm.);
     let mut ir_module = translate(wasm, frontend).unwrap();
-    println!("After translate");
     run_ir_passes(&mut ir_module, &triton_target_config.ir_passes);
-    println!("After run_ir_passes");
-    // dbg!(&ir_module);
 
     // print all functions
     // let mut func_idx: usize = ir_module.start_func_idx.into();
-    for func in ir_module.functions().iter() {
-        let func_idx: usize = ir_module.function_idx_by_name(&func.name()).unwrap().into();
-        println!("{func_idx}: {:#?}.", func);
-        // func_idx += 1;
-    }
+    // for func in ir_module.functions().iter() {
+    //     let func_idx: usize = ir_module.function_idx_by_name(&func.name()).unwrap().into();
+    //     println!("{func_idx}: {:#?}.", func);
+    //     // func_idx += 1;
+    // }
 
     let inst_buf = compile_module(ir_module, &triton_target_config).unwrap();
-    println!("After inst_buf");
     let out_source = inst_buf.pretty_print();
-    // println!("out_source: {}", out_source);
     expected_triton.assert_eq(&out_source);
     let program = inst_buf.program();
     let input = input.into_iter().map(Into::into).collect();
@@ -87,22 +83,26 @@ fn check_triton(
         out.into_iter().map(|b| b.into()).collect::<Vec<u64>>(),
         expected_output
     );
-    let stack = pretty_stack(&last_state.op_stack);
-    let expected_stack: Vec<u64> = vec![0; 16];
-    assert_eq!(stack, expected_stack);
+    let mut expected_stack = vec![
+        vec![BFieldElement::zero(); 11],
+        program.hash::<StarkHasher>().values().to_vec(),
+    ]
+    .concat();
+    expected_stack.reverse();
+    assert_eq!(last_state.op_stack.stack, expected_stack);
 }
 
-fn pp_trace(_trace: &[triton_vm::vm::VMState]) {
+fn _pp_trace(_trace: &[triton_vm::vm::VMState]) {
     // iterate over last n traces
     for state in _trace.iter() {
         //.rev().take(400).rev() {
         let s = format!(
             "{}: {}",
             &state.current_instruction().unwrap(),
-            pretty_print_vec_horiz(&pretty_stack(&state.op_stack))
+            _pretty_print_vec_horiz(&_pretty_stack(&state.op_stack))
         );
         dbg!(s);
-        let r = pretty_print_ram_horiz(&state.ram);
+        let r = _pretty_print_ram_horiz(&state.ram);
         dbg!(r);
     }
 }
@@ -153,7 +153,7 @@ fn check_wat(
     check_triton(&wasm, input, secret_input, expected_output, expected_triton);
 }
 
-fn pretty_print_ram_horiz(ram: &HashMap<BFieldElement, BFieldElement>) -> String {
+fn _pretty_print_ram_horiz(ram: &HashMap<BFieldElement, BFieldElement>) -> String {
     // TODO: sort by key (pointer)
     // ram.iter().map(|(k, v)| (k.into(), v.into())).collect()
     let mut s = String::new();
@@ -163,7 +163,7 @@ fn pretty_print_ram_horiz(ram: &HashMap<BFieldElement, BFieldElement>) -> String
     s
 }
 
-fn pretty_stack(stack: &OpStack) -> Vec<u64> {
+fn _pretty_stack(stack: &OpStack) -> Vec<u64> {
     stack
         .stack
         .iter()
@@ -173,7 +173,7 @@ fn pretty_stack(stack: &OpStack) -> Vec<u64> {
         .collect::<Vec<u64>>()
 }
 
-fn pretty_print_vec_horiz<T: std::fmt::Display>(vec: &[T]) -> String {
+fn _pretty_print_vec_horiz<T: std::fmt::Display>(vec: &[T]) -> String {
     let mut s = String::new();
     for v in vec {
         s.push_str(&format!("{} ", v));

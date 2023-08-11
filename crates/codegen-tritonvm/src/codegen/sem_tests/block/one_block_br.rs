@@ -46,7 +46,6 @@ fn test_one_block_br() {
             swap 2
             write_mem
             pop
-            pop
             push -4
             add
             push -1
@@ -55,7 +54,6 @@ fn test_one_block_br() {
             call globals_get
             push 4
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -87,7 +85,6 @@ fn test_one_block_br() {
             mul
             push 00000000002147483647
             add
-            push 0
             read_mem
             swap 1
             pop
@@ -99,7 +96,6 @@ fn test_one_block_br() {
             add
             swap 1
             write_mem
-            pop
             pop
             return
             main_l0_b0:
