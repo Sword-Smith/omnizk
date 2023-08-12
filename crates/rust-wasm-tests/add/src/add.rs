@@ -10,8 +10,8 @@ fn add_function(a: u64, b: u64) -> u64 {
 pub fn main_add() {
     let a = pub_input();
     let b = pub_input();
-    let r = add(a, b);
+    let r = add_function(a, b);
     let c = secret_input();
-    let r2 = add(r, c);
+    let r2 = add_function(r, c);
     pub_output(r2);
 }
